@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>人類みなけんこう化計画 | 管理栄養士 ひらの</title>
+  <title>朝枠ポイントカード | 人類みなけんこう化計画</title>
   <style>
     :root {
-      --bg-ice-blue: #f0f7fa;        /* 目に優しい淡い水色 */
+      /* プロフィールサイトと統一したカラーパレット */
+      --bg-ice-blue: #f0f7fa;        /* 淡いアイスブルー背景 */
       --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --accent-blue: #0284c7;        /* 清潔感のあるスカイブルー */
-      --brand-dark: #0f172a;
-      --nav-height: 64px;
+      --text-main: #1e293b;          /* スレートダークテキスト */
+      --text-muted: #64748b;         /* ミュートテキスト */
+      --accent-blue: #0284c7;        /* スカイブルー（プライマリ） */
+      --accent-blue-dark: #0369a1;   /* 濃いブルー */
+      --accent-blue-light: #e0f2fe;  /* ハイライト・薄水色 */
+      --border-blue: #dbeafe;        /* 枠線ブルー */
       --bottom-nav-height: 64px;
     }
 
@@ -28,239 +30,157 @@
       color: var(--text-main);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      /* 下部ナビゲーションが重ならないよう安全余白を確保 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      /* 下部ナビゲーションと重ならないよう余白を確保 */
       padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 16px) + 24px);
+      min-height: 100vh;
     }
 
-    /* 固定ヘッダー */
-    .site-header {
-      position: sticky;
-      top: 0;
-      left: 0;
+    .container {
       width: 100%;
-      height: var(--nav-height);
-      background-color: rgba(240, 247, 250, 0.95);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-bottom: 1px solid #dbeafe;
-      z-index: 100;
+      max-width: 480px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 22px 20px;
+      border: 1px solid var(--border-blue);
+      box-shadow: 0 4px 16px rgba(186, 215, 233, 0.25);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: var(--accent-blue-dark);
+      letter-spacing: 0.3px;
+      font-weight: 700;
+    }
+
+    .info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+    
+    /* 敬称略の注記 */
+    .keisho {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      text-align: right;
+      margin-bottom: 10px;
+      padding-right: 4px;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .user-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 12px 16px;
+      background-color: #f8fafc;
+      border: 1px solid #edf2f7;
+      border-radius: 14px;
+      transition: all 0.2s ease;
     }
 
-    /* 左側：ひらのロゴ */
-    .logo-link {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .logo-link:hover {
-      opacity: 0.8;
-    }
-    .logo-svg {
-      height: 34px;
-      width: auto;
+    /* 達成者（ハイライト） */
+    .user-item.achieved {
+      background-color: var(--accent-blue-light);
+      border-color: #bae6fd;
     }
 
-    /* 右側：SNS + ハンバーガーメニュー */
-    .header-actions {
+    .user-info {
       display: flex;
-      align-items: center;
-      gap: 14px;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    .sns-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #334155;
-      text-decoration: none;
-      transition: transform 0.15s, color 0.15s;
+    .user-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
     }
-    .sns-btn:hover {
+
+    .user-status {
+      font-size: 0.75rem;
       color: var(--accent-blue);
-      transform: translateY(-1px);
-    }
-    .sns-btn svg {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
-    }
-
-    /* ハンバーガーアイコン */
-    .menu-toggle-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 32px;
-      height: 32px;
-      gap: 5px;
-      padding: 0;
-      margin-left: 4px;
-    }
-    .menu-toggle-btn span {
-      display: block;
-      width: 24px;
-      height: 2.5px;
-      background-color: #1e293b;
-      border-radius: 2px;
-      transition: 0.25s ease;
-    }
-
-    /* スライドイン ドロワーメニュー */
-    .drawer-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.4);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      z-index: 200;
-    }
-    .drawer-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    .drawer-menu {
-      position: fixed;
-      top: 0;
-      right: -280px;
-      width: 280px;
-      height: 100%;
-      background-color: #ffffff;
-      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-      z-index: 210;
-      transition: right 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      padding: 24px 20px;
-    }
-    .drawer-menu.active {
-      right: 0;
-    }
-    .drawer-close {
-      align-self: flex-end;
-      background: none;
-      border: none;
-      font-size: 26px;
-      cursor: pointer;
-      color: #64748b;
-      line-height: 1;
-      margin-bottom: 20px;
-    }
-    .drawer-nav-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .drawer-nav-item a {
-      display: block;
-      font-size: 16px;
       font-weight: 600;
-      color: #1e293b;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: background 0.15s;
     }
-    .drawer-nav-item a:hover {
-      background-color: #f1f5f9;
+
+    .user-points {
+      font-size: 1.35rem;
+      font-weight: 800;
       color: var(--accent-blue);
-    }
-    .drawer-footer-note {
-      margin-top: auto;
-      font-size: 12px;
-      color: #94a3b8;
-      text-align: center;
-      border-top: 1px solid #f1f5f9;
-      padding-top: 16px;
+      text-align: right;
+      letter-spacing: -0.5px;
     }
 
-    /* メインコンテンツエリア */
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 28px 16px 20px;
+    .user-points span {
+      font-size: 0.8rem;
+      margin-left: 2px;
+      color: var(--text-muted);
+      font-weight: 500;
     }
-    .hero-card {
-      background: var(--card-bg);
-      border: 1px solid #dbeafe;
-      border-radius: 16px;
-      padding: 24px 20px;
-      box-shadow: 0 4px 12px rgba(186, 215, 233, 0.25);
-      margin-bottom: 24px;
+
+    /* 特典カード */
+    .rewards {
+      background: #ffffff;
+      border: 1px solid var(--border-blue);
     }
-    .tag-badge {
-      display: inline-block;
-      background: #e0f2fe;
-      color: #0284c7;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 4px 10px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-    h1 {
-      font-size: 22px;
-      color: #0369a1;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-    }
-    .hero-p {
-      color: #475569;
-      font-size: 14.5px;
-      margin-bottom: 20px;
-    }
-    .service-box {
-      background: #f8fafc;
-      border-left: 4px solid var(--accent-blue);
-      border-radius: 0 8px 8px 0;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    .service-box h2 {
-      font-size: 16px;
-      color: #1e293b;
+
+    .rewards strong.title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent-blue-dark);
       margin-bottom: 10px;
-    }
-    .service-box ul {
-      padding-left: 20px;
-      color: #475569;
-      font-size: 14px;
-    }
-    .service-box li {
-      margin-bottom: 6px;
-    }
-    .cta-btn {
-      display: block;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-      color: #ffffff;
-      text-align: center;
-      font-weight: bold;
-      font-size: 15px;
-      padding: 14px 20px;
-      border-radius: 12px;
-      text-decoration: none;
-      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-      transition: transform 0.15s, opacity 0.15s;
-    }
-    .cta-btn:hover {
-      opacity: 0.95;
-      transform: translateY(-1px);
+      font-size: 0.98rem;
+      font-weight: 700;
     }
 
-    /* --- 下部固定ナビゲーションバー --- */
+    .rewards ul {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.8;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .rewards li strong {
+      color: var(--accent-blue-dark);
+    }
+
+    .notice {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      line-height: 1.6;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 10px;
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 24px 0;
+    }
+
+    /* --- フローティング下部ナビゲーション --- */
     .floating-bottom-nav {
       position: fixed;
       bottom: calc(12px + env(safe-area-inset-bottom, 0px));
@@ -291,6 +211,7 @@
       gap: 3px;
       background: none;
       border: none;
+      text-decoration: none;
       cursor: pointer;
       padding: 6px 2px;
       border-radius: 14px;
@@ -350,194 +271,152 @@
     }
   </style>
 </head>
-<body id="top">
+<body>
 
-  <!-- 固定ヘッダー -->
-  <header class="site-header">
-    <a href="#top" class="logo-link" title="ホームへ戻る">
-      <svg class="logo-svg" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="24" cy="24" r="20" fill="#e0f2fe"/>
-        <path d="M14 28 C14 18, 26 14, 33 16 C33 26, 22 34, 14 28 Z" fill="#0284c7" opacity="0.85"/>
-        <path d="M18 25 C23 23, 27 19, 29 16" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-        <text x="52" y="32" font-family="'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif" font-weight="800" font-size="24" fill="#0f172a" letter-spacing="2">ひらの</text>
-        <circle cx="140" cy="18" r="3" fill="#38bdf8"/>
-      </svg>
-    </a>
+<div class="container">
+  <!-- ポイント一覧カード -->
+  <div class="card">
+    <h1>🌅 朝枠ポイントカード</h1>
+    <div class="info" id="season-info">読み込み中...</div>
 
-    <div class="header-actions">
-      <!-- X (Twitter) -->
-      <a href="https://x.com/hrnnrhr0711" target="_blank" rel="noopener noreferrer" class="sns-btn" title="公式X（@hrnnrhr0711）">
-        <svg viewBox="0 0 24 24">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-      </a>
+    <!-- 右端・小さめの敬称略 -->
+    <div class="keisho">※敬称略・同点は50音順</div>
 
-      <!-- Instagram -->
-      <a href="https://www.instagram.com/hrnnrhr0711?stkn=MXcyb3B5MGNuaGdseA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" class="sns-btn" title="公式Instagram">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-        </svg>
-      </a>
-
-      <!-- LINE -->
-      <a href="https://page.line.me/vxr3853t" target="_blank" rel="noopener noreferrer" class="sns-btn" title="公式LINE">
-        <svg viewBox="0 0 24 24">
-          <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.019 9.607.391.084.922.258 1.057.592.121.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.646 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.589-3.843 2.589-5.992z"/>
-        </svg>
-      </a>
-
-      <!-- ハンバーガーメニューボタン -->
-      <button class="menu-toggle-btn" id="menuBtn" aria-label="メニューを開く">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+    <div class="ranking-list" id="user-list">
+      <div class="loading">データを読み込み中...</div>
     </div>
-  </header>
+  </div>
 
-  <!-- スライドイン ドロワーメニュー -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-  <div class="drawer-menu" id="drawerMenu">
-    <button class="drawer-close" id="drawerClose">&times;</button>
-    <ul class="drawer-nav-list">
-      <li class="drawer-nav-item"><a href="#top" class="menu-link">ホーム</a></li>
-      <li class="drawer-nav-item"><a href="#about" class="menu-link">人類みなけんこう化計画とは</a></li>
-      <li class="drawer-nav-item"><a href="#services" class="menu-link">参加プラン・サービス一覧</a></li>
-      <li class="drawer-nav-item"><a href="#profile" class="menu-link" onclick="showPreparingNotice('プロフィール')">管理栄養士 ひらの 紹介</a></li>
-      <li class="drawer-nav-item"><a href="https://note.com" target="_blank" rel="noopener noreferrer">公式note</a></li>
-      <li class="drawer-nav-item"><a href="https://page.line.me/vxr3853t" target="_blank" rel="noopener noreferrer">公式LINE（無料相談・お便り）</a></li>
+  <!-- 特典・ルールカード -->
+  <div class="card rewards">
+    <strong class="title">🎁 特典ラインナップ</strong>
+    <ul>
+      <li><strong>350 pt:</strong> ガチャチケット 1枚 🎁</li>
+      <li><strong>690 pt:</strong> 1,000コイン還元 ✨</li>
     </ul>
-    <div class="drawer-footer-note">
-      合言葉：＼健康だー！／<br>
-      &copy; 人類みなけんこう化計画
+
+    <div class="notice">
+      ・配信日：毎週 月・水・木・金（朝7:00〜8:00）<br>
+      ・ポイント：朝枠入室 1回＝1pt / 100コイン応援＝10pt<br>
+      ・特典の受け渡し方法は達成時に個別で相談・ご案内します。<br>
+      ・最終更新日: <span id="updated-date">-</span>
     </div>
   </div>
+</div>
 
-  <!-- メインコンテンツ -->
-  <main class="container">
-    <div class="hero-card" id="about">
-      <span class="tag-badge">合言葉：＼健康だー！／</span>
-      <h1>人類みなけんこう化計画</h1>
-      <p class="hero-p">歯科クリニック併設ステーション勤務の管理栄養士が運営する、健康・咀嚼・食育の実践ポータルです。</p>
+<!-- フローティング下部ナビゲーションバー -->
+<nav class="floating-bottom-nav" aria-label="下部ナビゲーション">
+  <!-- ホーム（index.html へリンク） -->
+  <a href="index.html" class="nav-tab-btn">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+    <span>ホーム</span>
+  </a>
 
-      <div class="service-box" id="services">
-        <h2>提供サービス・参加スタイル</h2>
-        <ul>
-          <li><strong>Lv.0</strong>：朝7時のもぐもぐ宣言 ＆ 噛む力チェック（無料）</li>
-          <li><strong>Lv.0.5</strong>：REALITYサポーター Lv.1（200コイン / チートシート特典）</li>
-          <li><strong>Lv.1</strong>：実践・食育noteメンバーシップ（月額500円）</li>
-          <li><strong>Lv.2</strong>：オンラインコミュニティ推進室（月額1,980円）</li>
-          <li><strong>Lv.3</strong>：個別もぐもぐ作戦会議（30分通話相談）</li>
-        </ul>
-      </div>
+  <!-- プロフィール（準備中） -->
+  <button type="button" class="nav-tab-btn" onclick="showPreparingNotice('プロフィール')">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <span>プロフィール</span>
+  </button>
 
-      <a href="https://page.line.me/vxr3853t" target="_blank" rel="noopener noreferrer" class="cta-btn">
-        公式LINEで最新情報を受け取る
-      </a>
-    </div>
-  </main>
+  <!-- ポイントカード（現在地アクティブ） -->
+  <button type="button" class="nav-tab-btn active" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+      <line x1="2" y1="10" x2="22" y2="10"></line>
+    </svg>
+    <span>ポイント</span>
+  </button>
 
-  <!-- フローティング下部ナビゲーションバー -->
-  <nav class="floating-bottom-nav" aria-label="下部ナビゲーション">
-    <!-- ホーム -->
-    <button type="button" class="nav-tab-btn active" id="btnNavHome" onclick="handleBottomNav('home', this)">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-      </svg>
-      <span>ホーム</span>
-    </button>
+  <!-- レシピ検索（準備中） -->
+  <button type="button" class="nav-tab-btn" onclick="showPreparingNotice('レシピ検索')">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <span>レシピ検索</span>
+  </button>
+</nav>
 
-    <!-- プロフィール（準備中） -->
-    <button type="button" class="nav-tab-btn" onclick="handleBottomNav('profile', this)">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-      </svg>
-      <span>プロフィール</span>
-    </button>
+<!-- 準備中トースト通知 -->
+<div id="toastNotice" class="toast-notice">
+  <span>🚧 このページは現在準備中です</span>
+</div>
 
-    <!-- ポイントカード（準備中） -->
-    <button type="button" class="nav-tab-btn" onclick="handleBottomNav('points', this)">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-        <line x1="2" y1="10" x2="22" y2="10"></line>
-      </svg>
-      <span>ポイント</span>
-    </button>
+<script>
+  // トースト通知ロジック
+  let toastTimer = null;
+  function showPreparingNotice(pageName) {
+    const toast = document.getElementById('toastNotice');
+    toast.querySelector('span').textContent = `🚧 「${pageName}」は現在準備中です`;
+    toast.classList.add('show');
 
-    <!-- レシピ検索（準備中） -->
-    <button type="button" class="nav-tab-btn" onclick="handleBottomNav('recipe', this)">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      <span>レシピ検索</span>
-    </button>
-  </nav>
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+  }
 
-  <!-- 準備中トースト通知 -->
-  <div id="toastNotice" class="toast-notice">
-    <span>🚧 このページは現在準備中です</span>
-  </div>
+  // データ取得＆ソート処理
+  fetch('data.json')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('season-info').innerText = data.season;
+      document.getElementById('updated-date').innerText = data.updatedAt;
 
-  <!-- スクリプト -->
-  <script>
-    // ドロワーメニュー制御
-    const menuBtn = document.getElementById('menuBtn');
-    const drawerClose = document.getElementById('drawerClose');
-    const drawerOverlay = document.getElementById('drawerOverlay');
-    const drawerMenu = document.getElementById('drawerMenu');
-    const menuLinks = document.querySelectorAll('.menu-link');
+      const userListEl = document.getElementById('user-list');
+      userListEl.innerHTML = '';
 
-    function openMenu() {
-      drawerOverlay.classList.add('active');
-      drawerMenu.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+      let users = data.users || [];
 
-    function closeMenu() {
-      drawerOverlay.classList.remove('active');
-      drawerMenu.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+      // ①ポイント降順
+      // ②同点時は読み仮名（kana）ありを優先し50音順
+      // ③読み仮名なしは同点の中で最下位
+      users.sort((a, b) => {
+        if (b.points !== a.points) {
+          return b.points - a.points;
+        }
+        const kanaA = (a.kana || '').trim();
+        const kanaB = (b.kana || '').trim();
 
-    menuBtn.addEventListener('click', openMenu);
-    drawerClose.addEventListener('click', closeMenu);
-    drawerOverlay.addEventListener('click', closeMenu);
+        if (kanaA && !kanaB) return -1;
+        if (!kanaA && kanaB) return 1;
+        if (!kanaA && !kanaB) return a.name.localeCompare(b.name, 'ja');
 
-    menuLinks.forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
+        return kanaA.localeCompare(kanaB, 'ja');
+      });
 
-    // 下部ナビゲーション ＆ トースト通知制御
-    let toastTimer = null;
-
-    function showPreparingNotice(pageName) {
-      const toast = document.getElementById('toastNotice');
-      toast.querySelector('span').textContent = `🚧 「${pageName}」は現在準備中です`;
-      toast.classList.add('show');
-
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2000);
-    }
-
-    function handleBottomNav(type, el) {
-      if (type === 'home') {
-        document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        const names = {
-          profile: 'プロフィール',
-          points: 'ポイントカード',
-          recipe: 'レシピ検索'
-        };
-        showPreparingNotice(names[type] || 'ページ');
+      if (users.length === 0) {
+        userListEl.innerHTML = '<div class="loading">登録されているユーザーがいません</div>';
+        return;
       }
-    }
-  </script>
+
+      users.forEach(user => {
+        const item = document.createElement('div');
+        const isAchieved = user.points >= 350;
+        item.className = `user-item ${isAchieved ? 'achieved' : ''}`;
+
+        item.innerHTML = `
+          <div class="user-info">
+            <div class="user-name">${user.name}</div>
+            ${user.status ? `<div class="user-status">${user.status}</div>` : ''}
+          </div>
+          <div class="user-points">${user.points}<span>pt</span></div>
+        `;
+
+        userListEl.appendChild(item);
+      });
+    })
+    .catch(err => {
+      document.getElementById('season-info').innerText = 'データ読み込みエラー';
+      document.getElementById('user-list').innerHTML = '<div class="loading">データの取得に失敗しました</div>';
+    });
+</script>
+
 </body>
 </html>
