@@ -13,6 +13,7 @@
       --accent-blue: #0284c7;        /* 清潔感のあるスカイブルー */
       --brand-dark: #0f172a;
       --nav-height: 64px;
+      --bottom-nav-height: 64px;
     }
 
     * {
@@ -27,6 +28,8 @@
       color: var(--text-main);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      /* 下部ナビゲーションが重ならないよう安全余白を確保 */
+      padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 16px) + 24px);
     }
 
     /* 固定ヘッダー */
@@ -188,7 +191,7 @@
     .container {
       max-width: 680px;
       margin: 0 auto;
-      padding: 28px 16px 60px;
+      padding: 28px 16px 20px;
     }
     .hero-card {
       background: var(--card-bg);
@@ -256,27 +259,111 @@
       opacity: 0.95;
       transform: translateY(-1px);
     }
+
+    /* --- 下部固定ナビゲーションバー --- */
+    .floating-bottom-nav {
+      position: fixed;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 480px;
+      height: var(--bottom-nav-height);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(219, 234, 254, 0.9);
+      border-radius: 22px;
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 4px 6px;
+      z-index: 150;
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 2px;
+      border-radius: 14px;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-tab-btn svg {
+      width: 21px;
+      height: 21px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+      transition: transform 0.2s ease, stroke 0.2s ease;
+    }
+
+    .nav-tab-btn.active {
+      color: #0284c7;
+      background: rgba(2, 132, 199, 0.08);
+    }
+
+    .nav-tab-btn.active svg {
+      transform: scale(1.08);
+    }
+
+    /* 準備中トースト通知 */
+    .toast-notice {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translate(-50%, -20px);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toast-notice.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
   </style>
 </head>
 <body id="top">
 
   <!-- 固定ヘッダー -->
   <header class="site-header">
-    <!-- 左上：オリジナル「ひらの」ロゴ（ホームへジャンプ） -->
     <a href="#top" class="logo-link" title="ホームへ戻る">
       <svg class="logo-svg" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg">
-        <!-- 背景アクセント：やさしい水色のサークル -->
         <circle cx="24" cy="24" r="20" fill="#e0f2fe"/>
-        <!-- 象徴シンボル：葉っぱ（食育）× 咀嚼カーブ -->
         <path d="M14 28 C14 18, 26 14, 33 16 C33 26, 22 34, 14 28 Z" fill="#0284c7" opacity="0.85"/>
         <path d="M18 25 C23 23, 27 19, 29 16" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-        <!-- 「ひらの」のオリジナルロゴタイポグラフィ -->
         <text x="52" y="32" font-family="'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif" font-weight="800" font-size="24" fill="#0f172a" letter-spacing="2">ひらの</text>
         <circle cx="140" cy="18" r="3" fill="#38bdf8"/>
       </svg>
     </a>
 
-    <!-- 右側：SNSアイコン ＋ メニュー -->
     <div class="header-actions">
       <!-- X (Twitter) -->
       <a href="https://x.com/hrnnrhr0711" target="_blank" rel="noopener noreferrer" class="sns-btn" title="公式X（@hrnnrhr0711）">
@@ -308,7 +395,7 @@
     </div>
   </header>
 
-  <!-- スライドイン ドロワーメニュー（仮設定） -->
+  <!-- スライドイン ドロワーメニュー -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <div class="drawer-menu" id="drawerMenu">
     <button class="drawer-close" id="drawerClose">&times;</button>
@@ -316,7 +403,7 @@
       <li class="drawer-nav-item"><a href="#top" class="menu-link">ホーム</a></li>
       <li class="drawer-nav-item"><a href="#about" class="menu-link">人類みなけんこう化計画とは</a></li>
       <li class="drawer-nav-item"><a href="#services" class="menu-link">参加プラン・サービス一覧</a></li>
-      <li class="drawer-nav-item"><a href="#profile" class="menu-link">管理栄養士 ひらの 紹介</a></li>
+      <li class="drawer-nav-item"><a href="#profile" class="menu-link" onclick="showPreparingNotice('プロフィール')">管理栄養士 ひらの 紹介</a></li>
       <li class="drawer-nav-item"><a href="https://note.com" target="_blank" rel="noopener noreferrer">公式note</a></li>
       <li class="drawer-nav-item"><a href="https://page.line.me/vxr3853t" target="_blank" rel="noopener noreferrer">公式LINE（無料相談・お便り）</a></li>
     </ul>
@@ -350,8 +437,53 @@
     </div>
   </main>
 
-  <!-- メニュー開閉用 JavaScript -->
+  <!-- フローティング下部ナビゲーションバー -->
+  <nav class="floating-bottom-nav" aria-label="下部ナビゲーション">
+    <!-- ホーム -->
+    <button type="button" class="nav-tab-btn active" id="btnNavHome" onclick="handleBottomNav('home', this)">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>ホーム</span>
+    </button>
+
+    <!-- プロフィール（準備中） -->
+    <button type="button" class="nav-tab-btn" onclick="handleBottomNav('profile', this)">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>プロフィール</span>
+    </button>
+
+    <!-- ポイントカード（準備中） -->
+    <button type="button" class="nav-tab-btn" onclick="handleBottomNav('points', this)">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+        <line x1="2" y1="10" x2="22" y2="10"></line>
+      </svg>
+      <span>ポイント</span>
+    </button>
+
+    <!-- レシピ検索（準備中） -->
+    <button type="button" class="nav-tab-btn" onclick="handleBottomNav('recipe', this)">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <span>レシピ検索</span>
+    </button>
+  </nav>
+
+  <!-- 準備中トースト通知 -->
+  <div id="toastNotice" class="toast-notice">
+    <span>🚧 このページは現在準備中です</span>
+  </div>
+
+  <!-- スクリプト -->
   <script>
+    // ドロワーメニュー制御
     const menuBtn = document.getElementById('menuBtn');
     const drawerClose = document.getElementById('drawerClose');
     const drawerOverlay = document.getElementById('drawerOverlay');
@@ -377,6 +509,35 @@
     menuLinks.forEach(link => {
       link.addEventListener('click', closeMenu);
     });
+
+    // 下部ナビゲーション ＆ トースト通知制御
+    let toastTimer = null;
+
+    function showPreparingNotice(pageName) {
+      const toast = document.getElementById('toastNotice');
+      toast.querySelector('span').textContent = `🚧 「${pageName}」は現在準備中です`;
+      toast.classList.add('show');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function handleBottomNav(type, el) {
+      if (type === 'home') {
+        document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const names = {
+          profile: 'プロフィール',
+          points: 'ポイントカード',
+          recipe: 'レシピ検索'
+        };
+        showPreparingNotice(names[type] || 'ページ');
+      }
+    }
   </script>
 </body>
 </html>
